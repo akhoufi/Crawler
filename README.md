@@ -1,18 +1,16 @@
-# Web Crawler Structure
-
-La strucuture du projet est la suivante :
+# Web Crawler Packages
 
 ## crawler
-  desc
-
+This package defines the crawling logic (priority..) 
 ### queue_management
-  desc
-
-## Title 1
-  desc
-
-## Title 1
-  desc
   
-## Title 1
-  desc
+
+## extraction
+Extract webpage content from URLs
+
+## transformation
+Parsing webpages to text files and extract URLs 
+  
+  
+## indexation
+Index text files
