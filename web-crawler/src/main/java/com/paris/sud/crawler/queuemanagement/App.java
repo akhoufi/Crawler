@@ -1,4 +1,4 @@
-package com.paris.sud.crawler.queue_management;
+package com.paris.sud.crawler.queuemanagement;
 
 /**
  * Hello world!
