@@ -14,3 +14,6 @@ Parsing webpages to text files and extracting URLs
   
 ## indexation
 Indexing text files
+
+## analysis
+Compare webpages contents
