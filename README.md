@@ -6,11 +6,11 @@ This package defines the crawling logic (priority..)
   
 
 ## extraction
-Extract webpage content from URLs
+Extracting webpage content from URLs
 
 ## transformation
-Parsing webpages to text files and extract URLs 
+Parsing webpages to text files and extracting URLs 
   
   
 ## indexation
-Index text files
+Indexing text files
