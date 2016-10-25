@@ -2,7 +2,7 @@
 
 ## crawler
 This package defines the crawling logic (priority..) 
-### queue_management
+### queuemanagement
   
 
 ## extraction
