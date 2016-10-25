@@ -1,4 +1,4 @@
-package com.paris.sud.data_transformation;
+package com.paris.sud.transformation;
 
 /**
  * Hello world!

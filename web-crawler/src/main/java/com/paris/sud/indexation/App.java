@@ -1,4 +1,4 @@
-package com.paris.sud.data_indexation;
+package com.paris.sud.indexation;
 
 /**
  * Hello world!

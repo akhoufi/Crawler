@@ -1,4 +1,4 @@
-package com.paris.sud.data_analysis;
+package com.paris.sud.extraction;
 
 /**
  * Hello world!
