@@ -14,6 +14,7 @@ public class PageWriter {
 
     public final String outputPath="/Users/Hadhami/aic/Recherche et extraction d'info/Projet/Files";
     private final String NL = System.getProperty("line.separator");
+    private int numberItemsSaved= 0;
 
     public void saveContent(CrawlerUrl url)  throws Exception {
         WebPage webpage= new WebPage();
