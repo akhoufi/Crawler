@@ -1,7 +1,13 @@
 package com.paris.sud.crawler;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
@@ -21,6 +27,9 @@ public class CrawlerUrl {
     private boolean isAllowedToVisit;
     private boolean isCheckedForPermission = false;
     private boolean isVisited = false;
+
+    public CrawlerUrl() {
+    }
 
     public CrawlerUrl(String urlString, int depth) {
         this.depth = depth;
@@ -92,6 +101,29 @@ public class CrawlerUrl {
 
     public List<String> getLinks() {
         return(linkList);
+    }
+
+    public Queue<CrawlerUrl> readURL(){
+        BufferedReader reader = null;
+        // on se prend la liste des URLs a parcourir
+        Queue<CrawlerUrl> urlQueue = new LinkedList<CrawlerUrl>();
+        try {
+            File file = new File("/Users/Hadhami/aic/Recherche et extraction d'info/Projet/URLs");
+            reader = new BufferedReader(new FileReader(file));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+                urlQueue.add(new CrawlerUrl(line));
+                reader.close();
+                break;
+            }
+            return urlQueue;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void setRawContent(String htmlText) {
