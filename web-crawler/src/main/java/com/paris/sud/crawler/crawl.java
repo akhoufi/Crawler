@@ -3,6 +3,12 @@ package com.paris.sud.crawler;
 import com.paris.sud.transformation.PageWriter;
 import com.paris.sud.transformation.TransformWebPage;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Queue;
 
 /**
@@ -26,7 +32,14 @@ public class Crawl {
             if (url!=null){
                 TransformWebPage transform = new TransformWebPage(url.getUrlString());
                 writer.saveContent(transform);
-                writer.saveLinks(transform);
+                ArrayList<String> urlStrings = writer.saveLinks(transform);
+                for (int j=0; j<urlStrings.size();j++){
+                    String urlS= urlStrings.get(j);
+                    TransformWebPage transform1 = new TransformWebPage(urlS);
+                    writer.saveContentLinks(transform1,j);
+                    urlStrings.addAll(writer.saveLinks(transform1)) ;
+                    urlStrings.remove(j);
+                }
                 numberItemsSaved++;
             }else {
                 break;

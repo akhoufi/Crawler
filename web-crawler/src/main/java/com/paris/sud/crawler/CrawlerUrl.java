@@ -66,16 +66,5 @@ public class CrawlerUrl {
         }
     }
 
-    public CrawlerUrl getNextUrl() {  // obtenir l'URL suivant a explorer
-       CrawlerUrl url = new CrawlerUrl();
-        CrawlerUrl nextUrl = null;
-        while ((nextUrl == null) && (!url.readURL().isEmpty())) {
-            CrawlerUrl crawlerUrl = url.readURL().element();
-                nextUrl = crawlerUrl;
-                System.out.println("Le prochain url a visiter est "+nextUrl);
-
-        }
-        return nextUrl;
-    }
 
 }

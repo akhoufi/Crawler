@@ -3,6 +3,7 @@ package com.paris.sud.transformation;
 import com.paris.sud.crawler.CrawlerUrl;
 import org.junit.Test;
 
+import java.util.Collection;
 import java.util.Queue;
 
 /**
@@ -17,7 +18,7 @@ public class PageWriterTest {
         PageWriter writer= new PageWriter();
         TransformWebPage transform = new TransformWebPage(urlString.element().getUrlString());
         writer.saveContent(transform);
-        writer.saveLinks(transform);
+        Collection<String> urlStrings = writer.saveLinks(transform);
     }
 }
 
