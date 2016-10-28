@@ -1,5 +1,6 @@
 package com.paris.sud.transformation;
 
+import com.paris.sud.crawler.Crawl;
 import com.paris.sud.crawler.CrawlerUrl;
 import com.paris.sud.extraction.WebPage;
 
@@ -14,14 +15,17 @@ public class PageWriter {
 
     public final String outputPath="/Users/Hadhami/aic/Recherche et extraction d'info/Projet/Files";
     private final String NL = System.getProperty("line.separator");
-    private int numberItemsSaved= 0;
 
-    public void saveContent(CrawlerUrl url)  throws Exception {
+    public void saveContent(TransformWebPage transform)  throws Exception {
+
         WebPage webpage= new WebPage();
+        CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
         String content= webpage.getContent(url);
-        content = url . getNiceText();
-        String title   = url . getTitle();
-        String fileId="1";
+        transform.setRawContent(content,url.getUrlString());
+        content = transform . getNiceText();
+        String title   = transform . getTitle();
+        Crawl crawl = new Crawl();
+        String fileId=String.valueOf(crawl.getNumberItemsSaved());
         BufferedWriter contentOutput =
                 new BufferedWriter(
                         new FileWriter(outputPath + "/download_"+ fileId +".txt"));
@@ -42,9 +46,11 @@ public class PageWriter {
         urlOutput     . close();
     }
 
-    public void saveLinks(CrawlerUrl url) throws Exception {
-        Collection<String> urlStrings = url . getLinks();
-        String fileId = "1";
+    public void saveLinks(TransformWebPage transform) throws Exception {
+        Crawl crawl = new Crawl();
+        CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
+        Collection<String> urlStrings = transform . getLinks();
+        String fileId=String.valueOf(crawl.getNumberItemsSaved());
         BufferedWriter linksOutput =
                 new BufferedWriter(
                         new FileWriter(outputPath + "/outlinkurls_"+ fileId +".txt"));

@@ -2,11 +2,7 @@ package com.paris.sud.extraction;
 
 import com.paris.sud.crawler.CrawlerUrl;
 
-import java.io.*;
-import java.net.URL;
-import java.util.*;
-import java.util.regex.*;
-
+import com.paris.sud.transformation.TransformWebPage;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.ResponseHandler;
@@ -17,16 +13,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class WebPage {
 
-    private Map<String, CrawlerUrl> visitedUrls = null;
-
-    public String getContent(CrawlerUrl url) { // methode essentielle --
+    public String getContent(CrawlerUrl url) {
+        TransformWebPage transform = new TransformWebPage(url.getUrlString());
+        // methode essentielle --
         // recuperation du fichier .html depuis le serveur
         HttpClient httpclient = new DefaultHttpClient();
         String text = new String();
         try {
             HttpGet httpget = new HttpGet(url.getUrlString()); //construction
             //  de l'objet qui fera la connexion
-
             System.out.println("executing request " + httpget.getURI());
             // construction de l'objet qui gerera le dialogue avec le serveur
             ResponseHandler<String> responseHandler =
@@ -46,18 +41,12 @@ public class WebPage {
             httpclient.getConnectionManager().shutdown();
         }
        // markUrlAsVisited(url); // on marque l'URL
-        url . setRawContent(text); // on donne le texte HTML brut au parseur
+        transform. setRawContent(text,url.getUrlString()); // on donne le texte HTML brut au parseur
         // appele dans la classe CrawlerUrl -- qui en extrait le texte,
         // le titre, les liens sortants, etc. (apres avoir parse le texte
         // HTML ainsi fourni)
         return text;
 
     }
-
-    private void markUrlAsVisited(CrawlerUrl url) {
-        this.visitedUrls.put(url.getUrlString(), url);
-        url.setIsVisited();
-    }
-
 
 }

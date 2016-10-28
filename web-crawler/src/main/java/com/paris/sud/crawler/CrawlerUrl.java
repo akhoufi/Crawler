@@ -5,12 +5,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -21,20 +17,11 @@ import java.io.IOException;
  */
 public class CrawlerUrl {
 
-    private int depth = 0;
+
     private String urlString = null;
     private URL url = null;
-    private boolean isAllowedToVisit;
-    private boolean isCheckedForPermission = false;
-    private boolean isVisited = false;
 
     public CrawlerUrl() {
-    }
-
-    public CrawlerUrl(String urlString, int depth) {
-        this.depth = depth;
-        this.urlString = urlString;
-        computeURL();
     }
 
     public CrawlerUrl(String urlString) {
@@ -54,53 +41,8 @@ public class CrawlerUrl {
         return this.url;
     }
 
-    public int getDepth() {
-        return this.depth;
-    }
-
-    public boolean isAllowedToVisit() {
-        return isAllowedToVisit;
-    }
-
-    public void setAllowedToVisit(boolean isAllowedToVisit) {
-        this.isAllowedToVisit = isAllowedToVisit;
-        this.isCheckedForPermission = true;
-    }
-
-    public boolean isCheckedForPermission() {
-        return isCheckedForPermission;
-    }
-
-    public boolean isVisited() {
-        return isVisited;
-    }
-
-    public void setIsVisited() {
-        this.isVisited = true;
-    }
-
     public String getUrlString() {
         return this.urlString;
-    }
-
-    // donnees et methodes concernant le contenu telecharge depuis l'URL
-
-    private String       htmlText;
-    private Document htmlJsoupDoc;
-    private String       niceText;
-    private String       title;
-    private List<String> linkList;
-
-    public String getNiceText() {
-        return(niceText);
-    }
-
-    public String getTitle() {
-        return(title);
-    }
-
-    public List<String> getLinks() {
-        return(linkList);
     }
 
     public Queue<CrawlerUrl> readURL(){
@@ -110,14 +52,12 @@ public class CrawlerUrl {
         try {
             File file = new File("/Users/Hadhami/aic/Recherche et extraction d'info/Projet/URLs");
             reader = new BufferedReader(new FileReader(file));
-
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
                 urlQueue.add(new CrawlerUrl(line));
-                reader.close();
-                break;
             }
+            reader.close();
             return urlQueue;
 
         } catch (IOException e) {
@@ -126,21 +66,16 @@ public class CrawlerUrl {
         }
     }
 
-    public void setRawContent(String htmlText) {
-        String baseURL  = getURL() . toExternalForm();
-        this . htmlText = htmlText;
-        htmlJsoupDoc    = Jsoup . parse(htmlText,baseURL);
-        title           = htmlJsoupDoc . title();
-        niceText        = htmlJsoupDoc . body() . text();
-        linkList        = new ArrayList<String>();
-        Elements hrefJsoupLinks = htmlJsoupDoc . select("a[href]");
-        for (Element link : hrefJsoupLinks) {
-            String thisLink = link.attr("abs:href");
-            if(thisLink . startsWith("http://")) {
-                System.out.println("JSOUP Found: " + thisLink);
-                linkList . add(thisLink);
-            }
+    public CrawlerUrl getNextUrl() {  // obtenir l'URL suivant a explorer
+       CrawlerUrl url = new CrawlerUrl();
+        CrawlerUrl nextUrl = null;
+        while ((nextUrl == null) && (!url.readURL().isEmpty())) {
+            CrawlerUrl crawlerUrl = url.readURL().element();
+                nextUrl = crawlerUrl;
+                System.out.println("Le prochain url a visiter est "+nextUrl);
+
         }
+        return nextUrl;
     }
 
 }

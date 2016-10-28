@@ -1,7 +1,10 @@
 package com.paris.sud.extraction;
 
 import com.paris.sud.crawler.CrawlerUrl;
+import com.paris.sud.transformation.PageWriter;
 import org.junit.Test;
+
+import java.util.Queue;
 
 import static org.junit.Assert.*;
 
@@ -12,10 +15,10 @@ public class WebPageTest {
 
     @Test
     public void testGetContent() throws Exception {
-        String urlString="http://www.lemonde.fr/";
+        CrawlerUrl url = new CrawlerUrl();
+        Queue<CrawlerUrl> urlString=url.readURL();
         WebPage page= new WebPage();
-        CrawlerUrl url = new CrawlerUrl(urlString);
-        String text = page.getContent(url);
+        String text = page.getContent(urlString.element());
         assertNotNull(text);
     }
 }

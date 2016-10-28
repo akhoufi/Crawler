@@ -12,10 +12,13 @@ public class PageWriterTest {
 
     @Test
     public void testSaveContent() throws Exception {
-        CrawlerUrl url = new CrawlerUrl();
+       CrawlerUrl url = new CrawlerUrl();
         Queue<CrawlerUrl> urlString=url.readURL();
         PageWriter writer= new PageWriter();
-        writer.saveContent(urlString.element());
-        writer.saveLinks(urlString.element());
+        TransformWebPage transform = new TransformWebPage(urlString.element().getUrlString());
+        writer.saveContent(transform);
+        writer.saveLinks(transform);
     }
 }
+
+
