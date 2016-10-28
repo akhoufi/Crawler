@@ -6,10 +6,12 @@ import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 
 /**
@@ -45,7 +47,7 @@ public class CrawlerUrl {
         return this.urlString;
     }
 
-    public Queue<CrawlerUrl> readURL(){
+    public Queue<CrawlerUrl> readURL() {
         BufferedReader reader = null;
         // on se prend la liste des URLs a parcourir
         Queue<CrawlerUrl> urlQueue = new LinkedList<CrawlerUrl>();

@@ -33,7 +33,7 @@ public class Crawl {
                 TransformWebPage transform = new TransformWebPage(url.getUrlString());
                 writer.saveContent(transform);
                 ArrayList<String> urlStrings = writer.saveLinks(transform);
-                for (int j=0; j<urlStrings.size();j++){
+                for (int j=0; j<10;j++){
                     String urlS= urlStrings.get(j);
                     TransformWebPage transform1 = new TransformWebPage(urlS);
                     writer.saveContentLinks(transform1,j);

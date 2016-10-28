@@ -8,6 +8,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 /**
  * Created by Hadhami on 26/10/2016.
  */
@@ -29,19 +30,17 @@ public class WebPage {
             text = httpclient.execute(httpget, responseHandler);
 
             //System.out.println(text);
-        }
-        catch(Throwable t) {
-            System.out.println("OOPS YIKES "+ t . toString());
-            t . printStackTrace();
-        }
-        finally {
+        } catch (Throwable t) {
+            System.out.println("OOPS YIKES " + t.toString());
+            t.printStackTrace();
+        } finally {
             // Lorsque on n'a plus besoin de l'objet de type HttpClient
             // on ferme la connexion pour eliberer rapidement les resources
             // systeme qu'on avait monopolisees
             httpclient.getConnectionManager().shutdown();
         }
-       // markUrlAsVisited(url); // on marque l'URL
-        transform. setRawContent(text,url.getUrlString()); // on donne le texte HTML brut au parseur
+        // markUrlAsVisited(url); // on marque l'URL
+        transform.setRawContent(text, url.getUrlString()); // on donne le texte HTML brut au parseur
         // appele dans la classe CrawlerUrl -- qui en extrait le texte,
         // le titre, les liens sortants, etc. (apres avoir parse le texte
         // HTML ainsi fourni)
