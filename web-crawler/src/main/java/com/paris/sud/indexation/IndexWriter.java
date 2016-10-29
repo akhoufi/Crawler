@@ -1,4 +1,4 @@
-package com.paris.sud.transformation;
+package com.paris.sud.indexation;
 
 import java.io.BufferedWriter;
 import java.io.File;

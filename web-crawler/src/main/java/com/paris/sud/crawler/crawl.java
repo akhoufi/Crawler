@@ -1,16 +1,11 @@
 package com.paris.sud.crawler;
 
 import com.paris.sud.indexation.Hash;
-import com.paris.sud.transformation.IndexWriter;
+import com.paris.sud.indexation.IndexWriter;
 import com.paris.sud.transformation.PageWriter;
 import com.paris.sud.transformation.TransformWebPage;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Queue;
 
 /**
