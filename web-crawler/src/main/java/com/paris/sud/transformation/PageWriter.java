@@ -5,8 +5,7 @@ import com.paris.sud.crawler.CrawlerUrl;
 import com.paris.sud.extraction.WebPage;
 import com.paris.sud.indexation.Hash;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,10 +19,13 @@ public class PageWriter {
 
     public final String outputPath="/Users/Hadhami/aic/Recherche et extraction d'info/Projet/";
     private final String NL = System.getProperty("line.separator");
+
+
     static Hash h = new Hash();
 
-    public void saveContent(TransformWebPage transform)  throws Exception {
 
+
+    public void saveContent(TransformWebPage transform)  throws Exception {
         WebPage webpage= new WebPage();
         CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
         int code = h.hash(transform.getUrlString());
@@ -34,6 +36,7 @@ public class PageWriter {
         Crawl crawl = new Crawl();
         String fileId=String.valueOf(crawl.getNumberItemsSaved());
         for (int i=0;i<=crawl.getNumberItemsSaved();i++) {
+
             Path path = Paths.get(outputPath+code);
             Files.createDirectories(path);
             BufferedWriter contentOutput =
@@ -55,12 +58,15 @@ public class PageWriter {
             urlOutput.flush();
             urlOutput.close();
         }
+
     }
+
 
     public void saveContentLinks(TransformWebPage transform,int j)  throws Exception{
         Hash ha = new Hash();
         WebPage webpage= new WebPage();
         CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
+
         int code = ha.hash(transform.getUrlString());
         String content= webpage.getContent(url);
         transform.setRawContent(content,url.getUrlString());
@@ -110,4 +116,7 @@ public class PageWriter {
         }
         return urlStrings;
     }
+
+
+
 }
