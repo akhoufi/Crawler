@@ -12,6 +12,7 @@ import java.util.Queue;
  * Created by Hadhami on 27/10/2016.
  */
 public class Crawl {
+    private static Queue<CrawlerUrl> queue = null;
 
     public static int getNumberItemsSaved() {
         return numberItemsSaved;
@@ -22,31 +23,51 @@ public class Crawl {
     public void crawl() throws Exception {
 
         CrawlerUrl crawler = new CrawlerUrl();
+        CrawlingManager crawlingManager = new CrawlingManager();
         PageWriter writer = new PageWriter();
         IndexWriter indexWriter = new IndexWriter();
         Hash code = new Hash();
-        Queue<CrawlerUrl> queue = crawler.readURL();
+        queue = crawler.readURL();
         while (queue != null) {
-            CrawlerUrl url = queue.poll();
+            CrawlerUrl url = getNextUrl(crawlingManager);
             if (url != null) {
-                TransformWebPage transform = new TransformWebPage(url.getUrlString());
-                indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
-                writer.saveContent(transform);
-                ArrayList<String> urlStrings = writer.saveLinks(transform);
-                for (int j = 0; j < 10; j++) {
-                    String urlS = urlStrings.get(j);
-                    TransformWebPage transform1 = new TransformWebPage(urlS);
-                    indexWriter.write(urlS, code.hash(urlS));
-                    writer.saveContentLinks(transform1, j);
-                    urlStrings.addAll(writer.saveLinks(transform1));
-                    urlStrings.remove(j);
+                if (!"".equals(url.getUrlString())) {
+                    TransformWebPage transform = new TransformWebPage(url.getUrlString());
+                    indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
+                    writer.saveContent(transform);
+                    ArrayList<String> urlStrings = writer.saveLinks(transform);
+                    if (urlStrings.size() > 10) {
+                        for (int j = 0; j < 10; j++) {
+                            String urlS = urlStrings.get(j);
+                            TransformWebPage transform1 = new TransformWebPage(urlS);
+                            indexWriter.write(urlS, code.hash(urlS));
+                            writer.saveContentLinks(transform1, j);
+                            urlStrings.addAll(writer.saveLinks(transform1));
+                            urlStrings.remove(j);
+                        }
+                    }
+                    numberItemsSaved++;
                 }
-                numberItemsSaved++;
+
             } else {
                 break;
             }
         }
         indexWriter.closeWriter();
+    }
+
+
+    private CrawlerUrl getNextUrl(CrawlingManager crawlingManager) {  // obtenir l'URL suivant a explorer
+        CrawlerUrl nextUrl = null;
+        while ((nextUrl == null) && (!queue.isEmpty())) {
+            CrawlerUrl crawlerUrl = this.queue.poll();
+            if (crawlingManager.doWeHavePermissionToVisit(crawlerUrl)) {
+                //   && (crawlingManager.isUrlAlreadyVisited(crawlerUrl))) {
+                nextUrl = crawlerUrl;
+                System.out.println("Le prochain url a visiter est " + nextUrl.getUrlString());
+            }
+        }
+        return nextUrl;
     }
 
 

@@ -19,9 +19,18 @@ import java.io.IOException;
  */
 public class CrawlerUrl {
 
-
     private String urlString = null;
     private URL url = null;
+
+    private boolean isVisited = false;
+
+    public boolean isVisited() {
+        return isVisited;
+    }
+
+    public void setIsVisited() {
+        this.isVisited = true;
+    }
 
     public CrawlerUrl() {
     }

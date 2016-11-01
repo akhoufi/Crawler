@@ -28,6 +28,7 @@ public class WebPage {
             ResponseHandler<String> responseHandler =
                     new BasicResponseHandler();
             text = httpclient.execute(httpget, responseHandler);
+            transform.setRawContent(text, url.getUrlString()); // on donne le texte HTML brut au parseur
 
             //System.out.println(text);
         } catch (Throwable t) {
@@ -40,7 +41,6 @@ public class WebPage {
             httpclient.getConnectionManager().shutdown();
         }
         // markUrlAsVisited(url); // on marque l'URL
-        transform.setRawContent(text, url.getUrlString()); // on donne le texte HTML brut au parseur
         // appele dans la classe CrawlerUrl -- qui en extrait le texte,
         // le titre, les liens sortants, etc. (apres avoir parse le texte
         // HTML ainsi fourni)
