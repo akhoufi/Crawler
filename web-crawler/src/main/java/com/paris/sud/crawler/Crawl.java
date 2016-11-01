@@ -4,6 +4,7 @@ import com.paris.sud.indexation.Hash;
 import com.paris.sud.indexation.IndexWriter;
 import com.paris.sud.transformation.PageWriter;
 import com.paris.sud.transformation.TransformWebPage;
+import org.apache.http.conn.ConnectTimeoutException;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -25,35 +26,49 @@ public class Crawl {
         CrawlerUrl crawler = new CrawlerUrl();
         CrawlingManager crawlingManager = new CrawlingManager();
         PageWriter writer = new PageWriter();
-        IndexWriter indexWriter = new IndexWriter();
         Hash code = new Hash();
         queue = crawler.readURL();
         while (queue != null) {
             CrawlerUrl url = getNextUrl(crawlingManager);
             if (url != null) {
                 if (!"".equals(url.getUrlString())) {
-                    TransformWebPage transform = new TransformWebPage(url.getUrlString());
-                    indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
-                    writer.saveContent(transform);
-                    ArrayList<String> urlStrings = writer.saveLinks(transform);
-                    if (urlStrings.size() > 10) {
-                        for (int j = 0; j < 10; j++) {
-                            String urlS = urlStrings.get(j);
-                            TransformWebPage transform1 = new TransformWebPage(urlS);
-                            indexWriter.write(urlS, code.hash(urlS));
-                            writer.saveContentLinks(transform1, j);
-                            urlStrings.addAll(writer.saveLinks(transform1));
-                            urlStrings.remove(j);
+                    try {
+                        TransformWebPage transform = new TransformWebPage(url.getUrlString());
+                        writer.saveContent(transform);
+                        IndexWriter indexWriter = new IndexWriter();
+                        indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
+                        ArrayList<String> urlStrings = writer.saveLinks(transform);
+                        if (urlStrings.size() > 10) {
+                            for (int j = 0; j < 10; j++) {
+                                try {
+                                    String urlS = urlStrings.get(j);
+                                    TransformWebPage transform1 = new TransformWebPage(urlS);
+                                    indexWriter.write(urlS, code.hash(urlS));
+                                    writer.saveContentLinks(transform1, j);
+                                    urlStrings.addAll(writer.saveLinks(transform1));
+                                    urlStrings.remove(j);
+                                } catch (Exception e) {
+                                    System.out.println("can't crawl second page ");
+                                }
+
+                            }
                         }
+                        indexWriter.closeWriter();
+                        numberItemsSaved++;
+                    } catch (ConnectTimeoutException e) {
+                        System.out.println("can't crawl primary page for timeout reason");
+                    } catch (Exception e) {
+                        System.out.println("can't crawl primary page ");
                     }
-                    numberItemsSaved++;
+
+
                 }
 
             } else {
                 break;
             }
         }
-        indexWriter.closeWriter();
+
     }
 
 
