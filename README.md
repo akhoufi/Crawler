@@ -3,7 +3,6 @@
 ## crawler
 This package defines the crawling logic (priority..)
 Manage URLs
-#### queuemanagement
 
 
 ## extraction
