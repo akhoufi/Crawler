@@ -55,6 +55,7 @@ public class Crawl {
                         }
                         indexWriter.closeWriter();
                         numberItemsSaved++;
+                        Thread.sleep(crawlingManager.getDelayBetweenUrls());
                     } catch (ConnectTimeoutException e) {
                         System.out.println("can't crawl primary page for timeout reason");
                     } catch (Exception e) {

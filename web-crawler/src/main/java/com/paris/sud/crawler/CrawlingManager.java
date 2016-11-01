@@ -14,7 +14,11 @@ public class CrawlingManager {
     private static final String USER_AGENT = "User-agent:";
     private static final String DISALLOW = "Disallow:";
 
-    private long delayBetweenUrls;
+    public long getDelayBetweenUrls() {
+        return delayBetweenUrls;
+    }
+
+    public long delayBetweenUrls=100L;
 
     private Map<String, CrawlerUrl> visitedUrls = null;
     public Map<String, Collection<String>> sitePermissions;
