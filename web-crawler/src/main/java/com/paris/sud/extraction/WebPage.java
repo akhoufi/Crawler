@@ -6,8 +6,12 @@ import com.paris.sud.transformation.TransformWebPage;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 /**
  * Created by Hadhami on 26/10/2016.
@@ -18,7 +22,9 @@ public class WebPage {
         TransformWebPage transform = new TransformWebPage(url.getUrlString());
         // methode essentielle --
         // recuperation du fichier .html depuis le serveur
-        HttpClient httpclient = new DefaultHttpClient();
+        final HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 7000);
+        HttpClient httpclient = new DefaultHttpClient(httpParams);
         String text = new String();
         try {
             HttpGet httpget = new HttpGet(url.getUrlString()); //construction
@@ -28,6 +34,7 @@ public class WebPage {
             ResponseHandler<String> responseHandler =
                     new BasicResponseHandler();
             text = httpclient.execute(httpget, responseHandler);
+            transform.setRawContent(text, url.getUrlString()); // on donne le texte HTML brut au parseur
 
             //System.out.println(text);
         } catch (Throwable t) {
@@ -40,7 +47,6 @@ public class WebPage {
             httpclient.getConnectionManager().shutdown();
         }
         // markUrlAsVisited(url); // on marque l'URL
-        transform.setRawContent(text, url.getUrlString()); // on donne le texte HTML brut au parseur
         // appele dans la classe CrawlerUrl -- qui en extrait le texte,
         // le titre, les liens sortants, etc. (apres avoir parse le texte
         // HTML ainsi fourni)
