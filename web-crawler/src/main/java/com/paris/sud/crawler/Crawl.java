@@ -7,7 +7,9 @@ import com.paris.sud.transformation.TransformWebPage;
 import org.apache.http.conn.ConnectTimeoutException;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Queue;
+import java.util.Set;
 
 /**
  * Created by Hadhami on 27/10/2016.
@@ -30,6 +32,7 @@ public class Crawl {
         queue = crawler.readURL();
         while (queue != null) {
             CrawlerUrl url = getNextUrl(crawlingManager);
+            Set<String> visitedPages = new HashSet<String>();
             if (url != null) {
                 if (!"".equals(url.getUrlString())) {
                     try {
@@ -38,15 +41,19 @@ public class Crawl {
                         IndexWriter indexWriter = new IndexWriter();
                         indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
                         ArrayList<String> urlStrings = writer.saveLinks(transform);
+                        visitedPages.add(url.getUrlString());
                         if (urlStrings.size() > 10) {
                             for (int j = 0; j < 10; j++) {
                                 try {
                                     String urlS = urlStrings.get(j);
-                                    TransformWebPage transform1 = new TransformWebPage(urlS);
-                                    indexWriter.write(urlS, code.hash(urlS));
-                                    writer.saveContentLinks(transform1, j);
-                                    urlStrings.addAll(writer.saveLinks(transform1));
-                                    urlStrings.remove(j);
+                                    if (!visitedPages.contains(urlS)) {
+                                        TransformWebPage transform1 = new TransformWebPage(urlS);
+                                        indexWriter.write(urlS, code.hash(urlS));
+                                        writer.saveContentLinks(transform1, j);
+                                        urlStrings.addAll(writer.saveLinks(transform1));
+                                        urlStrings.remove(j);
+                                        visitedPages.add(urlS);
+                                    }
                                 } catch (Exception e) {
                                     System.out.println("can't crawl second page ");
                                 }
