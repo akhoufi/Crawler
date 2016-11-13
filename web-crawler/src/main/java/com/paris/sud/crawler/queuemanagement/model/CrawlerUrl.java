@@ -1,4 +1,6 @@
-package com.paris.sud.crawler;
+package com.paris.sud.crawler.queuemanagement.model;
+
+import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,11 +8,6 @@ import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
@@ -22,15 +19,6 @@ public class CrawlerUrl {
     private String urlString = null;
     private URL url = null;
 
-    private boolean isVisited = false;
-
-    public boolean isVisited() {
-        return isVisited;
-    }
-
-    public void setIsVisited() {
-        this.isVisited = true;
-    }
 
     public CrawlerUrl() {
     }
@@ -56,17 +44,27 @@ public class CrawlerUrl {
         return this.urlString;
     }
 
-    public Queue<CrawlerUrl> readURL() {
+    public QueueWithPriority<UrlWithPriority> readInitialURLs() {
         BufferedReader reader = null;
         // on se prend la liste des URLs a parcourir
-        Queue<CrawlerUrl> urlQueue = new LinkedList<CrawlerUrl>();
+        QueueWithPriority<UrlWithPriority> urlQueue = new QueueWithPriority<UrlWithPriority>(99999999, new Comparator<UrlWithPriority>() {
+            public int compare(UrlWithPriority x, UrlWithPriority y) {
+                if (x.getPriority() < y.getPriority()) {
+                    return -1;
+                }
+                if (x.getPriority() > y.getPriority()) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
         try {
             File file = new File("/Users/Hadhami/aic/Recherche et extraction d'info/Projet/URLs");
             reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
-                urlQueue.add(new CrawlerUrl(line));
+                urlQueue.add(new UrlWithPriority(new CrawlerUrl(line), 1));
             }
             reader.close();
             return urlQueue;

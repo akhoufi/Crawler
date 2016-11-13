@@ -1,7 +1,8 @@
 package com.paris.sud.extraction;
 
-import com.paris.sud.crawler.CrawlerUrl;
-import com.paris.sud.transformation.PageWriter;
+import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
+import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
 import org.junit.Test;
 
 import java.util.Queue;
@@ -16,9 +17,9 @@ public class WebPageTest {
     @Test
     public void testGetContent() throws Exception {
         CrawlerUrl url = new CrawlerUrl();
-        Queue<CrawlerUrl> urlString=url.readURL();
+        QueueWithPriority<UrlWithPriority> urlString= url.readInitialURLs();
         WebPage page= new WebPage();
-        String text = page.getContent(urlString.element());
+        String text = page.getContent(urlString.poll().getUrl());
         assertNotNull(text);
     }
 }

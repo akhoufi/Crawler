@@ -1,12 +1,11 @@
 package com.paris.sud.extraction;
 
-import com.paris.sud.crawler.CrawlerUrl;
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 
 import com.paris.sud.transformation.TransformWebPage;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;

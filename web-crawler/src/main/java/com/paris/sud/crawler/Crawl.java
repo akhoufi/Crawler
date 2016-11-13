@@ -1,5 +1,8 @@
 package com.paris.sud.crawler;
 
+import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
+import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
 import com.paris.sud.indexation.Hash;
 import com.paris.sud.indexation.IndexWriter;
 import com.paris.sud.transformation.PageWriter;
@@ -15,7 +18,9 @@ import java.util.Set;
  * Created by Hadhami on 27/10/2016.
  */
 public class Crawl {
-    private static Queue<CrawlerUrl> queue = null;
+
+    private QueueWithPriority<UrlWithPriority> queue = null;
+    private Set<String> visitedPages = new HashSet<String>();
 
     public static int getNumberItemsSaved() {
         return numberItemsSaved;
@@ -29,47 +34,32 @@ public class Crawl {
         CrawlingManager crawlingManager = new CrawlingManager();
         PageWriter writer = new PageWriter();
         Hash code = new Hash();
-        queue = crawler.readURL();
-        while (queue != null) {
-            CrawlerUrl url = getNextUrl(crawlingManager);
-            Set<String> visitedPages = new HashSet<String>();
+        queue = crawler.readInitialURLs();
+        // for each host in the file
+        while ((queue != null) ) {
+            UrlWithPriority url = getNextUrl(crawlingManager);
             if (url != null) {
-                if (!"".equals(url.getUrlString())) {
+                if (!"".equals(url.getUrl().getUrlString())) {
                     try {
-                        TransformWebPage transform = new TransformWebPage(url.getUrlString());
+
+                        visitedPages.add(url.getUrl().getUrlString());
+
+                        TransformWebPage transform = new TransformWebPage(url.getUrl().getUrlString());
                         writer.saveContent(transform);
                         IndexWriter indexWriter = new IndexWriter();
-                        indexWriter.write(url.getUrlString(), code.hash(url.getUrlString()));
-                        ArrayList<String> urlStrings = writer.saveLinks(transform);
-                        visitedPages.add(url.getUrlString());
-                        if (urlStrings.size() > 10) {
-                            for (int j = 0; j < 10; j++) {
-                                try {
-                                    String urlS = urlStrings.get(j);
-                                    if (!visitedPages.contains(urlS)) {
-                                        TransformWebPage transform1 = new TransformWebPage(urlS);
-                                        indexWriter.write(urlS, code.hash(urlS));
-                                        writer.saveContentLinks(transform1, j);
-                                        urlStrings.addAll(writer.saveLinks(transform1));
-                                        urlStrings.remove(j);
-                                        visitedPages.add(urlS);
-                                    }
-                                } catch (Exception e) {
-                                    System.out.println("can't crawl second page ");
-                                }
+                        indexWriter.write(url.getUrl().getUrlString(), code.hash(url.getUrl().getUrlString()));
+                        addListToQueue(writer.saveLinks(transform), url.getPriority());
 
-                            }
-                        }
-                        indexWriter.closeWriter();
+
                         numberItemsSaved++;
+                        //indexWriter.closeWriter();
+
                         Thread.sleep(crawlingManager.getDelayBetweenUrls());
                     } catch (ConnectTimeoutException e) {
-                        System.out.println("can't crawl primary page for timeout reason");
+                        System.out.println("can't crawl page for timeout reason");
                     } catch (Exception e) {
-                        System.out.println("can't crawl primary page ");
+                        System.out.println("can't crawl page : " + e.getMessage());
                     }
-
-
                 }
 
             } else {
@@ -80,18 +70,23 @@ public class Crawl {
     }
 
 
-    private CrawlerUrl getNextUrl(CrawlingManager crawlingManager) {  // obtenir l'URL suivant a explorer
-        CrawlerUrl nextUrl = null;
-        while ((nextUrl == null) && (!queue.isEmpty())) {
-            CrawlerUrl crawlerUrl = this.queue.poll();
-            if (crawlingManager.doWeHavePermissionToVisit(crawlerUrl)) {
+    public UrlWithPriority getNextUrl(CrawlingManager crawlingManager) {  // obtenir l'URL suivant a explorer
+        UrlWithPriority nextUrl = null;
+        while ((nextUrl == null) && (queue.size() != 0)) {
+            UrlWithPriority crawlerUrl = this.queue.poll();
+            if (crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl()) &&
+                    (!visitedPages.contains(crawlerUrl.getUrl().getUrlString()))) {
                 //   && (crawlingManager.isUrlAlreadyVisited(crawlerUrl))) {
                 nextUrl = crawlerUrl;
-                System.out.println("Le prochain url a visiter est " + nextUrl.getUrlString());
+                System.out.println("Le prochain url a visiter est " + nextUrl.getUrl().getUrlString());
             }
         }
         return nextUrl;
     }
 
-
+    public void addListToQueue(ArrayList<String> urlStrings, int priority) {
+        for (int i = 0; i < urlStrings.size(); i++) {
+            queue.add(new UrlWithPriority(new CrawlerUrl(urlStrings.get(i)), priority + 1));
+        }
+    }
 }

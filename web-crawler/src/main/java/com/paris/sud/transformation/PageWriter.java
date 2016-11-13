@@ -1,7 +1,7 @@
 package com.paris.sud.transformation;
 
 import com.paris.sud.crawler.Crawl;
-import com.paris.sud.crawler.CrawlerUrl;
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.extraction.WebPage;
 import com.paris.sud.indexation.Hash;
 
@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Created by Hadhami on 26/10/2016.
@@ -23,12 +22,15 @@ public class PageWriter {
 
     static Hash h = new Hash();
 
-
+    public String getHost(String url){
+        return url.substring(0,url.indexOf('/',8)+1);
+    }
 
     public void saveContent(TransformWebPage transform)  throws Exception {
         WebPage webpage= new WebPage();
         CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
         int code = h.hash(transform.getUrlString());
+        int hostCode = h.hash(getHost(transform.getUrlString()));
         String content= webpage.getContent(url);
         transform.setRawContent(content,url.getUrlString());
         content = transform . getNiceText();
@@ -37,7 +39,7 @@ public class PageWriter {
         String fileId=String.valueOf(crawl.getNumberItemsSaved());
         for (int i=0;i<=crawl.getNumberItemsSaved();i++) {
 
-            Path path = Paths.get(outputPath+code);
+            Path path = Paths.get(outputPath+hostCode);
             Files.createDirectories(path);
             BufferedWriter contentOutput =
                     new BufferedWriter(

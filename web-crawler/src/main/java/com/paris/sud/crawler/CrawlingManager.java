@@ -1,5 +1,6 @@
 package com.paris.sud.crawler;
 
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.extraction.WebPage;
 
 import java.net.URL;
@@ -106,13 +107,7 @@ public class CrawlingManager {
         return retValue;
     }
 
-    public boolean isUrlAlreadyVisited(CrawlerUrl crawlerUrl) {
-        if ((crawlerUrl.isVisited())
-                || (this.visitedUrls.containsKey(crawlerUrl.getUrlString()))) {
-            return true;
-        }
-        return false;
-    }
+
 
     public boolean doWeHavePermissionToVisit(CrawlerUrl crawlerUrl) {
         if (crawlerUrl == null) {
@@ -125,10 +120,7 @@ public class CrawlingManager {
         return isAllowedToVisit();
     }
 
-    public void markVisitedUrls(CrawlerUrl url) {
-        this.visitedUrls.put(url.getUrlString(), url);
-        url.setIsVisited();
-    }
+
 
 
 }

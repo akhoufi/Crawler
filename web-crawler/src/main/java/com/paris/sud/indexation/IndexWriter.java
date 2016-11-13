@@ -13,17 +13,13 @@ public class IndexWriter {
     public final static String INDEX_PATH = "/Users/Hadhami/aic/Recherche et extraction d'info/Projet/Index.txt";
     private BufferedWriter writer = null;
 
-    public IndexWriter() throws IOException {
-        writer = new BufferedWriter(new FileWriter((new File(INDEX_PATH)),true));
-    }
 
-    public void write(String url, int code)throws IOException {
-        writer.write(code+"  \t  "+url);
+    public void write(String url, int code) throws IOException {
+        writer = new BufferedWriter(new FileWriter((new File(INDEX_PATH)), true));
+        writer.write(code + "  \t  " + url);
         writer.newLine();
-
-    }
-
-    public void closeWriter() throws IOException {
         writer.close();
     }
+
+
 }

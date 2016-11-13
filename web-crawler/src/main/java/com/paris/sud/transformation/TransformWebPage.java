@@ -1,6 +1,6 @@
 package com.paris.sud.transformation;
 
-import com.paris.sud.crawler.CrawlerUrl;
+import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
