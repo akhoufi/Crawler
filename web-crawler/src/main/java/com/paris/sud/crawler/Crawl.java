@@ -1,5 +1,6 @@
 package com.paris.sud.crawler;
 
+import com.paris.sud.backup.CollectionPersister;
 import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
 import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
@@ -20,7 +21,8 @@ import java.util.Set;
 public class Crawl {
 
     private QueueWithPriority<UrlWithPriority> queue = null;
-    private Set<String> visitedPages = new HashSet<String>();
+    private CollectionPersister persister = new CollectionPersister();
+    private Set<String> visitedPages = persister.loadVisitedPages();
 
     public static int getNumberItemsSaved() {
         return numberItemsSaved;
@@ -36,7 +38,7 @@ public class Crawl {
         Hash code = new Hash();
         queue = crawler.readInitialURLs();
         // for each host in the file
-        while ((queue != null) ) {
+        while ((queue != null) && (numberItemsSaved < 10)) {
             UrlWithPriority url = getNextUrl(crawlingManager);
             if (url != null) {
                 if (!"".equals(url.getUrl().getUrlString())) {
@@ -53,6 +55,12 @@ public class Crawl {
 
                         numberItemsSaved++;
                         //indexWriter.closeWriter();
+
+                        // backup Collections
+                        if ((numberItemsSaved % 5) == 0) {
+                            persister.persistVisitedPages(visitedPages);
+                        }
+
 
                         Thread.sleep(crawlingManager.getDelayBetweenUrls());
                     } catch (ConnectTimeoutException e) {

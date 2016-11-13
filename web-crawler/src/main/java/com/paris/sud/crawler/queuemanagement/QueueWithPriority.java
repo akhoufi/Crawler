@@ -13,11 +13,13 @@ public class QueueWithPriority<E> {
     private int head = 0;
     private int tail = 0;
 
+
     @SuppressWarnings("unchecked")
     public QueueWithPriority(int capacity, Comparator<? super E> comparator) {
         this.objects = (E[]) new Object[capacity];
         this.comparator = comparator;
     }
+
 
     public void add(E elem) {
         if (tail == objects.length) {
