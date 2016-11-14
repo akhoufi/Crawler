@@ -3,7 +3,7 @@ package com.paris.sud.crawler;
 /**
  * Created by Hadhami on 14/11/2016.
  */
-public class main {
+public class Main {
     public static void main (String[] args){
         Crawl crawler= new Crawl();
         try {
