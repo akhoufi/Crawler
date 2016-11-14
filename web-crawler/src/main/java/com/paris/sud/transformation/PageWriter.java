@@ -51,7 +51,7 @@ public class PageWriter {
             contentOutput.write(content);
             contentOutput.flush();
             contentOutput.close();
-            BufferedWriter titleOutput =
+            /*BufferedWriter titleOutput =
                     new BufferedWriter(
                             new FileWriter(path + "/" + code + "t.txt"));
             titleOutput.write(title);
@@ -62,7 +62,7 @@ public class PageWriter {
                             (new FileWriter(path + "/" + code + "u.txt"));
             urlOutput.write(url.getUrlString());
             urlOutput.flush();
-            urlOutput.close();
+            urlOutput.close();*/
         }
 
     }
