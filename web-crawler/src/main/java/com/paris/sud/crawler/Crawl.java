@@ -96,8 +96,8 @@ public class Crawl {
             try {
                 CrawlingManager crawlingManager = new CrawlingManager();
                 permission = crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl());
-            } catch (IOException e) {
-                permission = true;
+            } catch (Exception e) {
+                permission = false;
             }
             boolean notVisited = !visitedPages.contains(crawlerUrl.getUrl().getUrlString());
             if ((permission) && (notVisited)) {
@@ -115,7 +115,7 @@ public class Crawl {
             try {
                 CrawlingManager crawlingManager = new CrawlingManager();
                 permission = crawlingManager.doWeHavePermissionToVisit(new CrawlerUrl(urlStrings.get(i)));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 permission = false;
             }
             boolean notVisited = !visitedPages.contains(urlStrings.get(i));
