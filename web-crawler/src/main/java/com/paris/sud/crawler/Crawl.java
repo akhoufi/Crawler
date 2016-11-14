@@ -45,7 +45,8 @@ public class Crawl {
             queue = crawler.readInitialURLs();
         }
         // for each host in the file
-        while ((queue.size() != 0) && (numberItemsSaved < 11)) {
+        // if you want to crawl the hole list, delete the condition for numberItemsSaved (numberItemsSaved < 11))
+        while ((queue.size() != 0) ) {
             UrlWithPriority url = getNextUrl(crawlingManager);
             if (url != null) {
                 if (!"".equals(url.getUrl().getUrlString())) {
@@ -95,10 +96,10 @@ public class Crawl {
             try {
                 permission = crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl());
             } catch (IOException e) {
-                permission = false;
+                permission = true;
             }
-            if ((permission) &&
-                    (!visitedPages.contains(crawlerUrl.getUrl().getUrlString()))) {
+            boolean notVisited = !visitedPages.contains(crawlerUrl.getUrl().getUrlString());
+            if ((permission) && (notVisited)) {
                 //   && (crawlingManager.isUrlAlreadyVisited(crawlerUrl))) {
                 nextUrl = crawlerUrl;
                 System.out.println("Le prochain url a visiter est " + nextUrl.getUrl().getUrlString());
@@ -115,7 +116,8 @@ public class Crawl {
             } catch (IOException e) {
                 permission = false;
             }
-            if ((permission) && ((!visitedPages.contains(urlStrings.get(i))))) {
+            boolean notVisited = !visitedPages.contains(urlStrings.get(i));
+            if ((permission) && (notVisited)) {
                 queue.add(new UrlWithPriority(new CrawlerUrl(urlStrings.get(i)), priority + 1));
             }
         }
