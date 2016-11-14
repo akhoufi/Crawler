@@ -17,5 +17,6 @@ Parsing webpages to text files and extracting URLs
 Indexing text files
 
 
-## analysis
-Compare webpages contents
+## backup
+Storing crawling states
+
