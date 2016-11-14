@@ -36,7 +36,7 @@ public class Crawl {
     public void crawl() throws Exception {
 
         CrawlerUrl crawler = new CrawlerUrl();
-        CrawlingManager crawlingManager = new CrawlingManager();
+        //CrawlingManager crawlingManager = new CrawlingManager();
         PageWriter writer = new PageWriter();
         Hash code = new Hash();
         numberItemsSaved = persister.loadNbItems();
@@ -47,7 +47,7 @@ public class Crawl {
         // for each host in the file
         // if you want to crawl the hole list, delete the condition for numberItemsSaved (numberItemsSaved < 11))
         while ((queue.size() != 0) ) {
-            UrlWithPriority url = getNextUrl(crawlingManager);
+            UrlWithPriority url = getNextUrl();
             if (url != null) {
                 if (!"".equals(url.getUrl().getUrlString())) {
                     try {
@@ -57,7 +57,7 @@ public class Crawl {
                         writer.saveContent(transform);
                         IndexWriter indexWriter = new IndexWriter();
                         indexWriter.write(url.getUrl().getUrlString(), code.hash(url.getUrl().getUrlString()));
-                        addListToQueue(crawlingManager, writer.saveLinks(transform), url.getPriority());
+                        addListToQueue(writer.saveLinks(transform), url.getPriority());
 
 
                         numberItemsSaved++;
@@ -72,7 +72,7 @@ public class Crawl {
                         }
 
 
-                        Thread.sleep(crawlingManager.getDelayBetweenUrls());
+                        Thread.sleep(100L);
                     } catch (ConnectTimeoutException e) {
                         System.out.println("can't crawl page for timeout reason");
                     } catch (Exception e) {
@@ -88,12 +88,13 @@ public class Crawl {
     }
 
 
-    public UrlWithPriority getNextUrl(CrawlingManager crawlingManager) {  // obtenir l'URL suivant a explorer
+    public UrlWithPriority getNextUrl() {  // obtenir l'URL suivant a explorer
         UrlWithPriority nextUrl = null;
         while ((nextUrl == null) && (queue.size() != 0)) {
             UrlWithPriority crawlerUrl = this.queue.poll();
-            boolean permission = false;
+            boolean permission = true;
             try {
+                CrawlingManager crawlingManager = new CrawlingManager();
                 permission = crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl());
             } catch (IOException e) {
                 permission = true;
@@ -108,10 +109,11 @@ public class Crawl {
         return nextUrl;
     }
 
-    public void addListToQueue(CrawlingManager crawlingManager, ArrayList<String> urlStrings, int priority) {
+    public void addListToQueue(ArrayList<String> urlStrings, int priority) {
         for (int i = 0; i < urlStrings.size(); i++) {
             boolean permission = false;
             try {
+                CrawlingManager crawlingManager = new CrawlingManager();
                 permission = crawlingManager.doWeHavePermissionToVisit(new CrawlerUrl(urlStrings.get(i)));
             } catch (IOException e) {
                 permission = false;

@@ -85,7 +85,7 @@ public class CrawlingManager {
     public boolean computePermissionForVisiting(CrawlerUrl crawlerUrl) throws IOException {
         URL url = crawlerUrl.getURL();
 
-        boolean retValue = (url != null);
+        boolean retValue = true;
         if (retValue) {
             String host = url.getHost();
             String port = "";

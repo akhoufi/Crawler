@@ -4,6 +4,7 @@ import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 
 import com.paris.sud.transformation.TransformWebPage;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.impl.client.BasicResponseHandler;
@@ -24,11 +25,18 @@ public class WebPage {
         // methode essentielle --
         // recuperation du fichier .html depuis le serveur
         final HttpParams httpParams = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(httpParams, 7000);
+        HttpConnectionParams.setConnectionTimeout(httpParams, 1000);
+        HttpConnectionParams.setSoTimeout(httpParams,1000);
+        HttpConnectionParams.setStaleCheckingEnabled(httpParams,false);
+        HttpConnectionParams.setTcpNoDelay(httpParams,false);
+        HttpConnectionParams.setSoReuseaddr(httpParams,false);
+        HttpConnectionParams.setSoReuseaddr(httpParams,false);
         HttpClient httpclient = new DefaultHttpClient(httpParams);
+        RequestConfig params = RequestConfig.custom().setConnectTimeout(1000).setSocketTimeout(1000).build();
         String text = new String();
 
         HttpGet httpget = new HttpGet(url.getUrlString()); //construction
+        httpget.setConfig(params);
         //  de l'objet qui fera la connexion
         System.out.println("executing request " + httpget.getURI());
         // construction de l'objet qui gerera le dialogue avec le serveur

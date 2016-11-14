@@ -60,7 +60,7 @@ public class CrawlerUrl {
             }
         });
         try {
-            File file = new File("/Users/Hadhami/aic/Recherche et extraction d'info/Projet/URLs");
+            File file = new File("/Users/Hadhami/aic/Recherche et extraction d'info/Projet/URLs.txt");
             reader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = reader.readLine()) != null) {
