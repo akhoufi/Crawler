@@ -8,19 +8,22 @@ import com.paris.sud.indexation.Hash;
 import com.paris.sud.indexation.IndexWriter;
 import com.paris.sud.transformation.PageWriter;
 import com.paris.sud.transformation.TransformWebPage;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.ConnectTimeoutException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by Hadhami on 27/10/2016.
  */
 public class Crawl {
 
-    private QueueWithPriority<UrlWithPriority> queue = null;
+    private PriorityBlockingQueue<UrlWithPriority> queue = null;
     private CollectionPersister persister = new CollectionPersister();
     private Set<String> visitedPages = persister.loadVisitedPages();
 
@@ -28,7 +31,7 @@ public class Crawl {
         return numberItemsSaved;
     }
 
-    public static int numberItemsSaved = 0;
+    private static int numberItemsSaved = 0;
 
     public void crawl() throws Exception {
 
@@ -36,29 +39,35 @@ public class Crawl {
         CrawlingManager crawlingManager = new CrawlingManager();
         PageWriter writer = new PageWriter();
         Hash code = new Hash();
-        queue = crawler.readInitialURLs();
+        numberItemsSaved = persister.loadNbItems();
+        queue = persister.loadQueue();
+        if (queue.size() == 0) {
+            queue = crawler.readInitialURLs();
+        }
         // for each host in the file
-        while ((queue != null) && (numberItemsSaved < 10)) {
+        while ((queue.size() != 0) && (numberItemsSaved < 11)) {
             UrlWithPriority url = getNextUrl(crawlingManager);
             if (url != null) {
                 if (!"".equals(url.getUrl().getUrlString())) {
                     try {
 
-                        visitedPages.add(url.getUrl().getUrlString());
 
                         TransformWebPage transform = new TransformWebPage(url.getUrl().getUrlString());
                         writer.saveContent(transform);
                         IndexWriter indexWriter = new IndexWriter();
                         indexWriter.write(url.getUrl().getUrlString(), code.hash(url.getUrl().getUrlString()));
-                        addListToQueue(writer.saveLinks(transform), url.getPriority());
+                        addListToQueue(crawlingManager, writer.saveLinks(transform), url.getPriority());
 
 
                         numberItemsSaved++;
+                        visitedPages.add(url.getUrl().getUrlString());
                         //indexWriter.closeWriter();
 
                         // backup Collections
-                        if ((numberItemsSaved % 5) == 0) {
+                        if ((numberItemsSaved % 1) == 0) {
                             persister.persistVisitedPages(visitedPages);
+                            persister.persistQueue(queue);
+                            persister.persistNbItems(numberItemsSaved);
                         }
 
 
@@ -82,7 +91,13 @@ public class Crawl {
         UrlWithPriority nextUrl = null;
         while ((nextUrl == null) && (queue.size() != 0)) {
             UrlWithPriority crawlerUrl = this.queue.poll();
-            if (crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl()) &&
+            boolean permission = false;
+            try {
+                permission = crawlingManager.doWeHavePermissionToVisit(crawlerUrl.getUrl());
+            } catch (IOException e) {
+                permission = false;
+            }
+            if ((permission) &&
                     (!visitedPages.contains(crawlerUrl.getUrl().getUrlString()))) {
                 //   && (crawlingManager.isUrlAlreadyVisited(crawlerUrl))) {
                 nextUrl = crawlerUrl;
@@ -92,9 +107,17 @@ public class Crawl {
         return nextUrl;
     }
 
-    public void addListToQueue(ArrayList<String> urlStrings, int priority) {
+    public void addListToQueue(CrawlingManager crawlingManager, ArrayList<String> urlStrings, int priority) {
         for (int i = 0; i < urlStrings.size(); i++) {
-            queue.add(new UrlWithPriority(new CrawlerUrl(urlStrings.get(i)), priority + 1));
+            boolean permission = false;
+            try {
+                permission = crawlingManager.doWeHavePermissionToVisit(new CrawlerUrl(urlStrings.get(i)));
+            } catch (IOException e) {
+                permission = false;
+            }
+            if ((permission) && ((!visitedPages.contains(urlStrings.get(i))))) {
+                queue.add(new UrlWithPriority(new CrawlerUrl(urlStrings.get(i)), priority + 1));
+            }
         }
     }
 }

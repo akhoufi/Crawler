@@ -13,6 +13,17 @@ public class QueueWithPriority<E> {
     private int head = 0;
     private int tail = 0;
 
+    public E[] getObjects() {
+        return objects;
+    }
+
+    public int getHead() {
+        return head;
+    }
+
+    public int getTail() {
+        return tail;
+    }
 
     @SuppressWarnings("unchecked")
     public QueueWithPriority(int capacity, Comparator<? super E> comparator) {
@@ -105,4 +116,5 @@ public class QueueWithPriority<E> {
         }
         System.out.println();
     }
+
 }

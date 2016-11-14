@@ -27,4 +27,8 @@ public class UrlWithPriority {
     public int getPriority() {
         return priority;
     }
+
+    public String toString() {
+        return url.getUrlString() + ";" + priority;
+    }
 }

@@ -14,9 +14,7 @@ public class CrawlTest {
 
     @Test
     public void testSaveContent() throws Exception {
-
         Crawl crawler= new Crawl();
         crawler.crawl();
-
     }
 }

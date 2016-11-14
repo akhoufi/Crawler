@@ -6,6 +6,7 @@ import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
 import org.junit.Test;
 
 import java.util.Queue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 import static org.junit.Assert.*;
 
@@ -17,7 +18,7 @@ public class WebPageTest {
     @Test
     public void testGetContent() throws Exception {
         CrawlerUrl url = new CrawlerUrl();
-        QueueWithPriority<UrlWithPriority> urlString= url.readInitialURLs();
+        PriorityBlockingQueue<UrlWithPriority> urlString= url.readInitialURLs();
         WebPage page= new WebPage();
         String text = page.getContent(urlString.poll().getUrl());
         assertNotNull(text);

@@ -2,7 +2,9 @@ package com.paris.sud.crawler;
 
 import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.extraction.WebPage;
+import org.apache.http.client.HttpResponseException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -54,7 +56,7 @@ public class CrawlingManager {
         this.isCheckedForPermission = true;
     }
 
-    public Collection<String> getDisallowedPaths(String host) {
+    public Collection<String> getDisallowedPaths(String host) throws IOException {
         CrawlerUrl url = new CrawlerUrl("http://" + host + "/robots.txt");
         WebPage content = new WebPage();
         String robotscontent = content.getContent(url);
@@ -80,7 +82,7 @@ public class CrawlingManager {
         return disallowedPaths;
     }
 
-    public boolean computePermissionForVisiting(CrawlerUrl crawlerUrl) {
+    public boolean computePermissionForVisiting(CrawlerUrl crawlerUrl) throws IOException {
         URL url = crawlerUrl.getURL();
 
         boolean retValue = (url != null);
@@ -109,7 +111,7 @@ public class CrawlingManager {
 
 
 
-    public boolean doWeHavePermissionToVisit(CrawlerUrl crawlerUrl) {
+    public boolean doWeHavePermissionToVisit(CrawlerUrl crawlerUrl) throws IOException {
         if (crawlerUrl == null) {
             return false;
         }
@@ -118,6 +120,7 @@ public class CrawlingManager {
         }
         // We need to check
         return isAllowedToVisit();
+
     }
 
 

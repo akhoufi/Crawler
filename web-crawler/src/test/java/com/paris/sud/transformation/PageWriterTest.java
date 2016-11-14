@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.util.Collection;
 import java.util.Queue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by Hadhami on 27/10/2016.
@@ -17,7 +18,7 @@ public class PageWriterTest {
     @Test
     public void testSaveContent() throws Exception {
         CrawlerUrl url = new CrawlerUrl();
-        QueueWithPriority<UrlWithPriority> urlString = url.readInitialURLs();
+        PriorityBlockingQueue<UrlWithPriority> urlString = url.readInitialURLs();
         PageWriter writer = new PageWriter();
         TransformWebPage transform = new TransformWebPage(urlString.poll().getUrl().getUrlString());
         writer.saveContent(transform);

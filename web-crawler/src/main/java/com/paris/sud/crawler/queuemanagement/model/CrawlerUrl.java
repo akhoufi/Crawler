@@ -10,6 +10,7 @@ import java.net.URL;
 import java.util.*;
 
 import java.io.IOException;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Created by Hadhami on 26/10/2016.
@@ -44,10 +45,10 @@ public class CrawlerUrl {
         return this.urlString;
     }
 
-    public QueueWithPriority<UrlWithPriority> readInitialURLs() {
+    public PriorityBlockingQueue<UrlWithPriority> readInitialURLs() {
         BufferedReader reader = null;
         // on se prend la liste des URLs a parcourir
-        QueueWithPriority<UrlWithPriority> urlQueue = new QueueWithPriority<UrlWithPriority>(99999999, new Comparator<UrlWithPriority>() {
+        PriorityBlockingQueue<UrlWithPriority> urlQueue = new PriorityBlockingQueue<UrlWithPriority>(99999999, new Comparator<UrlWithPriority>() {
             public int compare(UrlWithPriority x, UrlWithPriority y) {
                 if (x.getPriority() < y.getPriority()) {
                     return -1;
