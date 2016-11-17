@@ -67,42 +67,6 @@ public class PageWriter {
 
     }
 
-
-    public void saveContentLinks(TransformWebPage transform, int j) throws Exception {
-        Hash ha = new Hash();
-        WebPage webpage = new WebPage();
-        CrawlerUrl url = new CrawlerUrl(transform.getUrlString());
-
-        int code = ha.hash(transform.getUrlString());
-        String content = webpage.getContent(url);
-        transform.setRawContent(content, url.getUrlString());
-        content = transform.getNiceText();
-        String title = transform.getTitle();
-        Crawl crawl = new Crawl();
-        String fileId = String.valueOf(crawl.getNumberItemsSaved());
-
-        BufferedWriter contentOutput =
-                new BufferedWriter(
-                        new FileWriter(outputPath + h.getC() + "/" + code + "c.txt"));
-        contentOutput.write(content);
-        contentOutput.flush();
-        contentOutput.close();
-        BufferedWriter titleOutput =
-                new BufferedWriter(
-                        new FileWriter(outputPath + h.getC() + "/" + code + "t.txt"));
-        titleOutput.write(title);
-        titleOutput.flush();
-        titleOutput.close();
-        BufferedWriter urlOutput =
-                new BufferedWriter
-                        (new FileWriter(outputPath + h.getC() + "/" + code + "u.txt"));
-        urlOutput.write(url.getUrlString());
-        urlOutput.flush();
-        urlOutput.close();
-
-    }
-
-
     public ArrayList<String> saveLinks(TransformWebPage transform) throws Exception {
         Crawl crawl = new Crawl();
         Hash ha = new Hash();

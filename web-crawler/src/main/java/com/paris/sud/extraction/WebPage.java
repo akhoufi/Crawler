@@ -38,7 +38,7 @@ public class WebPage {
         HttpGet httpget = new HttpGet(url.getUrlString()); //construction
         httpget.setConfig(params);
         //  de l'objet qui fera la connexion
-        System.out.println("executing request " + httpget.getURI());
+        //System.out.println("executing request " + httpget.getURI());
         // construction de l'objet qui gerera le dialogue avec le serveur
         ResponseHandler<String> responseHandler =
                 new BasicResponseHandler();
@@ -47,10 +47,6 @@ public class WebPage {
         httpclient.getConnectionManager().shutdown();
         //System.out.println(text);
 
-        // markUrlAsVisited(url); // on marque l'URL
-        // appele dans la classe CrawlerUrl -- qui en extrait le texte,
-        // le titre, les liens sortants, etc. (apres avoir parse le texte
-        // HTML ainsi fourni)
         return text;
 
     }

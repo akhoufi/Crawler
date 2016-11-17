@@ -109,8 +109,6 @@ public class CrawlingManager {
         return retValue;
     }
 
-
-
     public boolean doWeHavePermissionToVisit(CrawlerUrl crawlerUrl) throws IOException {
         if (crawlerUrl == null) {
             return false;
