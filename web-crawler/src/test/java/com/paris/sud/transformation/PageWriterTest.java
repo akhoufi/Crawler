@@ -1,13 +1,10 @@
 package com.paris.sud.transformation;
 
-import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
 import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**

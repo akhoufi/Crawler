@@ -1,10 +1,8 @@
 package com.paris.sud.backup;
 
-import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
 import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
 
-import javax.imageio.IIOException;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;

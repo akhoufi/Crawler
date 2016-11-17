@@ -1,20 +1,15 @@
 package com.paris.sud.crawler;
 
 import com.paris.sud.backup.CollectionPersister;
-import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
 import com.paris.sud.crawler.queuemanagement.model.CrawlerUrl;
 import com.paris.sud.crawler.queuemanagement.model.UrlWithPriority;
 import com.paris.sud.indexation.Hash;
 import com.paris.sud.indexation.IndexWriter;
 import com.paris.sud.transformation.PageWriter;
 import com.paris.sud.transformation.TransformWebPage;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.conn.ConnectTimeoutException;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 
@@ -73,6 +68,8 @@ public class Crawl {
 
 
                         Thread.sleep(100L);
+
+
                     } catch (ConnectTimeoutException e) {
                         System.out.println("can't crawl page for timeout reason");
                     } catch (Exception e) {
@@ -101,7 +98,6 @@ public class Crawl {
             }
             boolean notVisited = !visitedPages.contains(crawlerUrl.getUrl().getUrlString());
             if ((permission) && (notVisited)) {
-                //   && (crawlingManager.isUrlAlreadyVisited(crawlerUrl))) {
                 nextUrl = crawlerUrl;
                 System.out.println("Le prochain url a visiter est " + nextUrl.getUrl().getUrlString());
             }

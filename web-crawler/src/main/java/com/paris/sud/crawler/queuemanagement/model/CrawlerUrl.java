@@ -1,7 +1,5 @@
 package com.paris.sud.crawler.queuemanagement.model;
 
-import com.paris.sud.crawler.queuemanagement.QueueWithPriority;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
